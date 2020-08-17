@@ -1,0 +1,33 @@
+{
+  "name": "karya-backend",
+  "version": "1.0.0",
+  "description": "Backend to karya",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon --watch .env --watch src --exec babel-node src --source-maps"
+  },
+  "keywords": [
+    "karya"
+  ],
+  "author": "Nihal Maskey",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-status-codes": "^1.4.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1",
+    "@babel/node": "^7.10.5",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/register": "^7.10.5",
+    "eslint-config-leapfrog": "^3.0.0",
+    "nodemon": "^2.0.4"
+  }
+}
