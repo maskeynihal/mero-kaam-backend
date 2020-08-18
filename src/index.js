@@ -15,6 +15,8 @@ dotenv.config();
 
 // Initialize morgan
 app.use(morgan('tiny'));
+
+app.use(express.urlencoded({ extended: true }));
 app.use(json());
 
 // Handle cors error
@@ -34,6 +36,15 @@ app.use(cors());
 app.set('port', APP_PORT);
 
 app.use('/api', routes);
+
+// 404 error
+app.use((req, res, next) => {
+  next({
+    msg: 'Page not found',
+    status: statusCode.NOT_FOUND
+  });
+});
+
 // Error
 app.use((err, req, res, next) => {
   res.status(err.status || statusCode.BAD_REQUEST).json({
@@ -41,14 +52,6 @@ app.use((err, req, res, next) => {
     message: err.msg || err.message || err.detail || err,
     status: err.status || statusCode.BAD_REQUEST,
     errors: err
-  });
-});
-
-// 404 error
-app.use((req, res, next) => {
-  next({
-    msg: 'Page not found',
-    status: statusCode.NOT_FOUND
   });
 });
 
