@@ -1,31 +1,36 @@
-import express from 'express';
+import express, { json } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
-import routes from
+import routes from './router';
 
 const app = express();
 
 const APP_PORT = process.env.SERVER_PORT || 8000;
 
-app.set('port', APP_PORT);
-
 // Initialize morgan
 app.use(morgan('tiny'));
-app.use(bodyParser.json());
+app.use(json());
+//API Routes
 
-app.get('/hello', (req, res) => {
-  res.send('heelog');
-});
+app.use('/api', routes);
+
+app.set('port', APP_PORT);
 
 app.listen(app.get('port'), () => {
   console.log(`Server Started on ${app.get('port')}`);
 });
 
 // Catch uncaught exceptions
-process.on('uncaughtException', (err) => {
-  process.exit(1);
-});
+process
+  .on('unhandledRejection', (reason, p) => {
+    console.error(reason, 'Unhandled Rejection at Promise', p);
+  })
+  .on('uncaughtException', (err) => {
+    console.error(err, 'Uncaught Exception thrown');
+
+    process.exit(1);
+  });
 
 export default app;
