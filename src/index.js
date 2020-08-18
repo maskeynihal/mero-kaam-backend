@@ -16,7 +16,13 @@ dotenv.config();
 // Initialize morgan
 app.use(morgan('tiny'));
 
-app.use(express.urlencoded({ extended: true }));
+// Parse incoming data
+app.use(
+  express.urlencoded({
+    extended: true
+  })
+);
+
 app.use(json());
 
 // Handle cors error

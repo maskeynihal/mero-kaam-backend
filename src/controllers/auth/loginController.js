@@ -23,7 +23,7 @@ export const login = async (req, res, next) => {
     }
 
     //generate jwttoken
-    const token = generateToken(userEmail);
+    const token = generateToken(user[0]);
 
     res.status(200).json({
       message: 'User Login',

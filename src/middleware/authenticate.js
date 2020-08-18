@@ -2,17 +2,19 @@ import { verify } from 'jsonwebtoken';
 import HttpToken from 'http-status-codes';
 import * as userQueries from '@/services/queries/userQueries';
 
-export default async (req, res, next) => {
-  // Gather the jwt access token from the request header
+export default (req, res, next) => {
+  // Gather the access token from the request header
   const token = req.headers['authorization'] || req.headers['x-access-token'] || req.headers['token'];
-  // const token = authHeader && authHeader.split(' ')[1];
+
+  // if there isn't any token
   if (token == null)
     return res.status(HttpToken.UNAUTHORIZED).json({
       error: true,
       data: null,
       message: 'Not Authorized'
-    }); // if there isn't any token
+    });
 
+  // verify token if provided
   verify(token, process.env.TOKEN_SECRET, async (error, data) => {
     if (error)
       return next({
@@ -22,6 +24,7 @@ export default async (req, res, next) => {
       });
 
     const user = await userQueries.getUserByEmail(data.email);
+    // if no credentials found
     if (user && user.length <= 0) {
       return next({
         message: 'No such credentials found',
@@ -29,6 +32,8 @@ export default async (req, res, next) => {
         status: HttpToken.UNAUTHORIZED
       });
     }
+
+    // if no email match
     if (user[0].email !== data.email) {
       next({
         message: 'Not Authorized',
@@ -36,6 +41,8 @@ export default async (req, res, next) => {
         status: HttpToken.UNAUTHORIZED
       });
     }
-    next(); // pass the execution off to whatever request the client intended
+
+    req.headers = { ...req.headers, userId: user[0].user_id };
+    next(); // pass the execution
   });
 };
